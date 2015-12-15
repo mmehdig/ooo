@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <title>
+        Odd One Out
+    </title>
+</head>
+<body>
+<div class="header">
+    name: {{ name }}
+    <a href="{{ url_for('quit') }}">quit</a>
+</div>
+<div id="interface">
+    <a id="place_1" onclick="send(this)">
+    </a>
+    <a id="place_2" onclick="send(this)">
+    </a>
+    <a id="place_3" onclick="send(this)">
+    </a>
+    <a id="place_4" onclick="send(this)">
+    </a>
+</div>
+<script>
+    function send(obj) {
+        var obj_id = obj.getAttributeNode("id").value;
+        var index = obj.getElementsByTagName('img')[0].getAttributeNode('data-index').value;
+        var context = [];
+        var items = document.getElementById("interface").getElementsByTagName("a");
+        console.log(context, index, obj_id);
+        for (var i = items.length; i--;) {
+            context.push(items[i].getElementsByTagName('img')[0].getAttributeNode('data-index').value);
+        }
+        console.log(context, index, obj_id);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                document.getElementById(obj_id).innerHTML = xhttp.responseText;
+            }
+        };
+        xhttp.open("GET", "/select/"+index+"/"+context.join(','), true);
+        xhttp.send();
+    };
+
+    function loadInterface(obj_id) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                document.getElementById(obj_id).innerHTML = xhttp.responseText;
+            }
+        };
+        xhttp.open("GET", "/i", true);
+        xhttp.send();
+        // setTimeout(function() {loadInterface();}, 1000);
+    };
+
+    loadInterface("place_1");
+    loadInterface("place_2");
+    loadInterface("place_3");
+    loadInterface("place_4");
+</script>
+</body>
+</html>
+
